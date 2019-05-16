@@ -1,5 +1,7 @@
 from room import Room
 from player import Player
+from item import Item
+import random
 
 # Declare all the rooms
 
@@ -34,35 +36,25 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
-#
-# Main
-#
+rooms_list = ['outside', 'foyer', 'overlook', 'narrow', 'treasure']
+key_room = random.randint(0,4)
+block_room = random.randint(0,4)
+room[rooms_list[key_room]].items = [Item("Key")]
+room[rooms_list[block_room]].items = [Item("Block")]
 
-# Make a new player object that is currently in the 'outside' room.
-player_one = Player(room['outside'])
-
-# Write a loop that:
-#
-# * Prints the current room name
-# ---> look up room in dictionary
-# * Prints the current description (the textwrap module might be useful here).
-# * Waits for user input and decides what to do.
-#
-# If the user enters a cardinal direction, attempt to move to the room there.
-# Print an error message if the movement isn't allowed.
-#
-# If the user enters "q", quit the game.
+player_one = Player(room['outside'], [])
+print("Welcome to the game!","\n")
+print(str(rooms_list[key_room]), "and", str(rooms_list[block_room]))
 
 selection = 0
-directions = "N: North" "\n" "E: East" "\n" "S: South" "\n" "W: West" "\n" "Q: Quit"
 
 while selection != 'q':
-    print("--------------------------------------")
-    print(player_one.current_room, "\n", directions)
-    selection = input("Which direction would you like to go? ")
+    print("--------------------------------------", "\n")
+    print(player_one.current_room)
+    selection = input("Which direction would you like to go? (N, E, S, W or Q to quit) ")
     
     try:
-        selection = selection.lower()
+        selection = selection.lower().strip()
         if selection == 'n':
             player_one.current_room = player_one.current_room.n_to
         elif selection == 'e':
@@ -71,10 +63,12 @@ while selection != 'q':
             player_one.current_room = player_one.current_room.s_to
         elif selection == 'w':
             player_one.current_room = player_one.current_room.w_to
+        elif selection == 'q':
+            print("Thank for playing!")
         else:
             print("--------------------------------------")
-            print("***Please enter one of the 4 Cardinal directions***")
+            print("***Please enter one of the 4 Cardinal directions***", "\n")
     except AttributeError:
         print("--------------------------------------")
-        print("***There are no rooms in that direction, please select a different direction***")
+        print("***There are no rooms in that direction, please select a different direction***", "\n")
 
