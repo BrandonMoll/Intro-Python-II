@@ -8,7 +8,7 @@ class Room:
         self.attributes = attributes
         self.items = items
 
-    def __repr__(self):
+    def __str__(self):
         output = ""
         output += "Current Location: " + self.name + "\n" + "\n"
         output += "Description: " + self.attributes + "\n"
