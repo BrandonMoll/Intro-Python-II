@@ -6,7 +6,7 @@ class Player:
     def __init__ (self, current_room, items=[], health=6):
         self.current_room = current_room
         self.items = items
-        self.health = int(health)
+        self.health = health
 
     def __str__(self):
         output = ""

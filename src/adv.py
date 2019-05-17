@@ -50,8 +50,22 @@ selection = 0
 
 def health():
     for x in player_one.items:
-        if x.name == "Block":
+        print("****PLAYER ITEMS*****", x.name)
+        if str(x.name) == "Block":
+            print("IF STATEMENT")
             player_one.health -= 1
+
+def food(cur_room):
+    num = random.randint(1,16)
+    if num == 1:
+        cur_items = room[cur_room].items
+        cur_items.append(Item("Food"))
+        room[cur_room].items = cur_items
+    elif num == 2 or num == 3 or num == 4:
+        cur_items = room[cur_room].items
+        cur_items.append(Item("Food"))
+        room[cur_room].items = cur_items
+    
 
 while selection != 'q':
     print("--------------------------------------", "\n")
@@ -59,38 +73,53 @@ while selection != 'q':
     if len(player_one.current_room.items) > 0:
         print("To pick up an item, enter: pick up")
     selection = input("Which direction would you like to go? (N, E, S, W or Q to quit) ")
+    cur_room = ""
+    for name, desc in room.items():
+        if desc == player_one.current_room:
+            cur_room = name
     
     try:
         selection = selection.lower().strip()
         if selection == 'n':
             health()
             player_one.current_room = player_one.current_room.n_to
+            food(cur_room)
         elif selection == 'e':
             health()
             player_one.current_room = player_one.current_room.e_to
+            food(cur_room)
         elif selection == 's':
             health()
             player_one.current_room = player_one.current_room.s_to
+            food(cur_room)
         elif selection == 'w':
             health()
             player_one.current_room = player_one.current_room.w_to
+            food(cur_room)
         elif len(player_one.current_room.items) > 0 and selection == "pick up":
             while True:
                 i = 1
-                for x in player_one.current_room.items:
+                for x in room[cur_room].items:
                     output = ""
                     output += str(i) + ". " + x.name + "\n"
+                    i += 1
+                i = 1
                 print(output)
                 item_selection = input("Enter the number for which Item you want to pick up: ")
                 item_selection = int(item_selection)
                 if item_selection > 0 and item_selection <= len(player_one.current_room.items):
                     item_name = player_one.current_room.items[item_selection-1]
-                    if item_name == "Food":
-                        player_one.health += 2
+                    if str(item_name) == "Food":
                         print("You have gained 2 health!")
+                        health = player_one.health
+                        health += 2
+                        player_one.health = health
+                        room[cur_room].items.remove(item_name)
                         break
                     else:
-                        player_one.items = [Item(str(item_name))]
+                        cur_items = player_one.items
+                        cur_items.append(Item(item_name))
+                        player_one.items = cur_items
                         player_one.current_room.items.remove(item_name)
                         break
                 else:
@@ -100,7 +129,7 @@ while selection != 'q':
         else:
             print("--------------------------------------")
             print("***Please enter one of the 4 Cardinal directions***", "\n")
-    except AttributeError:
+    except:
         print("--------------------------------------")
         print("***There are no rooms in that direction, please select a different direction***", "\n")
 
